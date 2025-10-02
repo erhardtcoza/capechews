@@ -1,0 +1,28 @@
+name = "capechews"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "capechews-db"
+database_id = "REPLACE_D1_ID"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "REPLACE_KV_ID"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "capechews-assets"
+
+[vars]
+SITE_URL = "https://capechews.co.za"
+LEGAL_THC = "false"         # flip to "true" only if legally cleared
+AGE_MIN = "18"
+
+# Secrets to add (do **not** commit values):
+# wrangler secret put YOCO_SECRET_KEY
+# wrangler secret put YOCO_WEBHOOK_SECRET
+# wrangler secret put WHATSAPP_TOKEN
+# wrangler secret put WHATSAPP_VERIFY_TOKEN
+# wrangler secret put JWT_SECRET
