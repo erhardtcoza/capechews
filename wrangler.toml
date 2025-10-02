@@ -26,3 +26,4 @@ AGE_MIN = "18"
 # wrangler secret put WHATSAPP_TOKEN
 # wrangler secret put WHATSAPP_VERIFY_TOKEN
 # wrangler secret put JWT_SECRET
+# wrangler secret put ADMIN_KEY
