@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "CapeChews Admin + Store API",
+    "_postman_id": "a0d2f7d0-6d7f-4f7f-9f0b-cc1f6f8eab10",
+    "description": "Postman collection for CapeChews Cloudflare Worker (products, orders, checkout, webhooks, WhatsApp).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://capechews.co.za" },
+    { "key": "adminKey", "value": "REPLACE_WITH_ADMIN_KEY" }
+  ],
+  "item": [
+    {
+      "name": "Admin - List Products",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "x-admin-key", "value": "{{adminKey}}" }],
+        "url": { "raw": "{{baseUrl}}/api/admin/products", "host": ["{{baseUrl}}"], "path": ["api","admin","products"] }
+      }
+    },
+    {
+      "name": "Admin - Create Product",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-admin-key", "value": "{{adminKey}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Gummy Sample\",\n  \"slug\": \"gummy-sample\",\n  \"category\": \"gummies\",\n  \"description\": \"Tasty sample\",\n  \"price_cents\": 19900,\n  \"member_price_cents\": 16900,\n  \"image_url\": \"https://example.com/g1.jpg\",\n  \"legal_flags\": \"CBD\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/admin/product.create", "host": ["{{baseUrl}}"], "path": ["api","admin","product.create"] }
+      }
+    },
+    {
+      "name": "Admin - Update Product",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "x-admin-key", "value": "{{adminKey}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 1,\n  \"name\": \"Gummy Sample Updated\",\n  \"price_cents\": 20900,\n  \"member_price_cents\": 17900\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/admin/product.update", "host": ["{{baseUrl}}"], "path": ["api","admin","product.update"] }
+      }
+    },
+    {
+      "name": "Admin - Delete Product",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "x-admin-key", "value": "{{adminKey}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/product.delete?id=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","admin","product.delete"],
+          "query": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Admin - List Orders",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "x-admin-key", "value": "{{adminKey}}" }],
+        "url": { "raw": "{{baseUrl}}/api/admin/orders?status=pending", "host": ["{{baseUrl}}"], "path": ["api","admin","orders"], "query": [{ "key": "status", "value": "pending" }] }
+      }
+    },
+    {
+      "name": "Admin - Update Order Status",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-admin-key", "value": "{{adminKey}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"id\": \"REPLACE_ORDER_UUID\",\n  \"status\": \"packing\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/admin/order.update", "host": ["{{baseUrl}}"], "path": ["api","admin","order.update"] }
+      }
+    },
+    {
+      "name": "Shop - List Products (Public)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/shop/products?category=gummies", "host": ["{{baseUrl}}"], "path": ["api","shop","products"], "query": [{ "key": "category", "value": "gummies" }] }
+      }
+    },
+    {
+      "name": "Cart - Create Cart",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"items\": [{\"product_id\": 1, \"qty\": 2}],\n  \"membership_tier\": \"member\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart", "host": ["{{baseUrl}}"], "path": ["api","cart"] }
+      }
+    },
+    {
+      "name": "Checkout - Create Order + Yoco Link",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"cart_id\": \"REPLACE_CART_ID\",\n  \"shipping\": {\"name\":\"John Doe\",\"phone\":\"27821234567\",\"address\":\"12 Main Rd, Cape Town\"}\n}" },
+        "url": { "raw": "{{baseUrl}}/api/checkout", "host": ["{{baseUrl}}"], "path": ["api","checkout"] }
+      }
+    },
+    {
+      "name": "Webhook - Yoco (Test)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-yoco-signature", "value": "REPLACE_VALID_SIGNATURE_FOR_TEST" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"payment.success\",\n  \"id\": \"evt_123\",\n  \"reference\": \"REPLACE_ORDER_UUID\",\n  \"amount\": 19900\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/webhooks/yoco", "host": ["{{baseUrl}}"], "path": ["api","webhooks","yoco"] }
+      }
+    },
+    {
+      "name": "WhatsApp - Verify (GET)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/whatsapp/webhook?hub.mode=subscribe&hub.verify_token=REPLACE_VERIFY_TOKEN&hub.challenge=123",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","whatsapp","webhook"],
+          "query": [
+            { "key": "hub.mode", "value": "subscribe" },
+            { "key": "hub.verify_token", "value": "REPLACE_VERIFY_TOKEN" },
+            { "key": "hub.challenge", "value": "123" }
+          ]
+        }
+      }
+    }
+  ]
+}
